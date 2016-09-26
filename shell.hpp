@@ -1,6 +1,7 @@
 #ifndef SHELL_HPP
 #define SHELL_HPP
 
+#include<iomanip>
 #include<unistd.h>
 #include<sys/wait.h>
 #include<chrono>

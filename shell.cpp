@@ -44,7 +44,7 @@ void shell::setPtime(double t){
 }
 
 double shell::getPtime(){
- std::cout << "Total time executing child processes: " << ptime << std::endl;
+ std::cout << "Total time executing child processes: " << std::setprecision(5) <<ptime << std::endl;
  return ptime;
 }
 
@@ -84,6 +84,8 @@ void shell::executeCommand(std::vector<std::string> cmd){
  }
  else{
   if(execvp(argv[0], argv) == -1){
+   std::cout << "Something went wrong.(execvp returned -1) \n Possible causes:\n \t 1) command not in path variable \n \t 2) Invalid command/arguments " << std::endl;
+   std::cout << "For help, type \"help\" \n exiting child process..." << std::endl;
    std::vector<std::string> v;
    v.push_back("exit");
    executeCommand(v);
