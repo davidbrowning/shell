@@ -1,8 +1,6 @@
 #include "shell.hpp"
-#include<sstream>
-#include<string>
-#include<cstdlib>
 
+#include<string>
 
 int startShell();
 std::vector<std::string> parseCommand(std::string);
@@ -22,7 +20,8 @@ shell myshell;
   std::getline(std::cin, cmd);
   auto parsedCommand = parseCommand(cmd);
   myshell.appendHistory(parsedCommand);
-  myshell.showHistory();
+  //myshell.showHistory();
+  myshell.executeCommand(parsedCommand);
  }
 
 
