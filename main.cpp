@@ -5,7 +5,7 @@
 
 
 int startShell();
-char** parseCommand(std::string);
+std::vector<std::string> parseCommand(std::string);
 
 int main(){
 
@@ -20,20 +20,17 @@ shell myshell;
   std::cout << "[cmd]:";
   std::string cmd = "";
   std::getline(std::cin, cmd);
-  std::cout << cmd << std::endl;
-  auto parsedCommand = parseCommand(cmd); 
-
+  auto parsedCommand = parseCommand(cmd);
+  myshell.appendHistory(parsedCommand);
+  myshell.showHistory();
  }
 
 
 return 0;
 }
 
-char** parseCommand(std::string s){ 
- if(s == "" || s == " "){
-  return NULL;
- }
- else{
+
+std::vector<std::string> parseCommand(std::string s){
    std::vector<std::string> argvVector;
    std::istringstream iss(s);
   do{
@@ -41,20 +38,23 @@ char** parseCommand(std::string s){
    iss >> cx;
    argvVector.push_back(cx);
    } while (iss);
- int i = argvVector.size();
+  return argvVector;
+ }
+/* int i = argvVector.size();
  char** argv = new char*[i];
  argv[i] = NULL;
  i--;
  for(i;i>=0;i--){
-  argv[i] = new char[10];
+  argv[i] = new char[5];
   std::string cmd = argvVector.at(i);
   strcpy(argv[i], cmd.c_str());
   std::cout << "argv["<<i<<"]"<<argv[i]<<std::endl;
  }
+ std::cout << "made it here" << std::endl;
  return argv;
  }
-return NULL;
+*/
  
-}
+
 
 
