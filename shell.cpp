@@ -65,13 +65,13 @@ void shell::executeCommand(std::vector<std::string> cmd){
     }
    }
  else if(cmd.at(0).empty() == false){
-  std::cout << "cmd.at(0): " << cmd.at(0) << std::endl;
-  std::cout << "cmd.size(): " << cmd.size() << std::endl;
+//  std::cout << "cmd.at(0): " << cmd.at(0) << std::endl;
+//  std::cout << "cmd.size(): " << cmd.size() << std::endl;
   char** argv = new char*[(cmd.size())];
   int i = 0;
   for(i; i < cmd.size()-1; i++){
    if(cmd.at(i).empty() == false){
-    std::cout << "cmd.at(" << i << ")" << cmd.at(i) << std::endl;
+//    std::cout << "cmd.at(" << i << ")" << cmd.at(i) << std::endl;
     argv[i] = new char[5];
     strcpy(argv[i],cmd.at(i).c_str());
    }
@@ -83,7 +83,11 @@ void shell::executeCommand(std::vector<std::string> cmd){
   //execvp(argv[0], argv);
  }
  else{
-  execvp(argv[0], argv);
+  if(execvp(argv[0], argv) == -1){
+   std::vector<std::string> v;
+   v.push_back("exit");
+   executeCommand(v);
+  }
  }
 
  }
