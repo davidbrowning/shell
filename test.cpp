@@ -11,9 +11,9 @@ void params(int a){
 }
 
 int main(){
-auto t = timer_no_args(test);
+auto t = timer(test);
 std::cout << t.count() << std::endl;
-auto p = timer_one_args(8, params);
+auto p = timer(8, params);
 std::cout << p.count() << std::endl;
 return 0;
 }
