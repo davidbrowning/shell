@@ -32,7 +32,7 @@ void help(){
  std::cout << "Built in commands are:" << std::endl;
  std::cout << "\t ptime: shows the time it took to run the last process" << std::endl;
  std::cout << "\t history: shows all commands entered during this instance of the shell" << std::endl;
- std::cout << "\t ^ <number>: displays then runs the <number>th command in history" << std::endl;
+ std::cout << "\t ^ <number>: displays then runs the <number>th command in history on a zero based index" << std::endl;
  std::cout << "\t exit: exits the shell" << std::endl << std::endl;
  std::cout << "Shell will also attempt to run any commands located by your PATH variable using the execvp function" << std::endl;
 return;
@@ -65,21 +65,27 @@ void shell::executeCommand(std::vector<std::string> cmd){
     }
    }
  else if(cmd.at(0).empty() == false){
-  //std::cout << "not empty!" << std::endl;
-  int j = cmd.size();
-  char** argv = new char*[j];
- // std::cout << "argv created" << std::endl;
-  argv[j] = NULL;
-  //std::cout << "argv last element set to null" << std::endl;
-  for (int i = cmd.size() - 1; i >= 0; i--){
-   argv[i] = new char[5];
-   //std::cout << "argv["<<i<<"] initialized" << std::endl;
-   std::string cm = cmd.at(i);
-   //std::cout << "cmd.at successfully copied" << cm << std::endl;
-   strcpy(argv[i],cm.c_str());
-   std::cout << "argv[0]" << argv[0] << std::endl;
-   //execvp(argv[0], argv);
+  std::cout << "cmd.at(0): " << cmd.at(0) << std::endl;
+  std::cout << "cmd.size(): " << cmd.size() << std::endl;
+  char** argv = new char*[(cmd.size())];
+  int i = 0;
+  for(i; i < cmd.size()-1; i++){
+   if(cmd.at(i).empty() == false){
+    std::cout << "cmd.at(" << i << ")" << cmd.at(i) << std::endl;
+    argv[i] = new char[5];
+    strcpy(argv[i],cmd.at(i).c_str());
+   }
   }
+ i = (cmd.size()-1);
+ argv[i] = NULL;
+ if(fork()){
+  wait(NULL);
+  //execvp(argv[0], argv);
+ }
+ else{
+  execvp(argv[0], argv);
+ }
+
  }
  
  //get end time

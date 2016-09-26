@@ -1,6 +1,8 @@
 #ifndef SHELL_HPP
 #define SHELL_HPP
 
+#include<unistd.h>
+#include<sys/wait.h>
 #include<chrono>
 #include<sstream>
 #include<string>
