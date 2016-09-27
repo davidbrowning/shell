@@ -7,6 +7,7 @@ void shell::appendHistory(std::vector<std::string> c){
 }
 
 std::vector<std::string> shell::retrieveHistory(int c){
+ c = c-1;
  if(history.at(c).empty() == false){
   return history.at(c);
  }
@@ -17,11 +18,15 @@ std::vector<std::string> shell::retrieveHistory(int c){
 }
 
 void shell::showHistory(){
+int i = 1; 
+std::cout << "--Command History--" << std::endl;
  for(std::vector<std::string> c : history){
+ std::cout << i << ": ";
   for(std::string s : c){
     std::cout << s << " ";
   }
  std::cout << std::endl;
+ i++;
  }
 return;
 
@@ -32,7 +37,7 @@ void help(){
  std::cout << "Built in commands are:" << std::endl;
  std::cout << "\t ptime: shows the time it took to run the last process" << std::endl;
  std::cout << "\t history: shows all commands entered during this instance of the shell" << std::endl;
- std::cout << "\t ^ <number>: displays then runs the <number>th command in history on a zero based index" << std::endl;
+ std::cout << "\t ^ <number>: displays then runs the <number>th command in history" << std::endl;
  std::cout << "\t exit: exits the shell" << std::endl << std::endl;
  std::cout << "Shell will also attempt to run any commands located by your PATH variable using the execvp function" << std::endl;
 return;
