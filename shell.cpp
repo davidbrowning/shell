@@ -1,5 +1,6 @@
 #include "shell.hpp"
 
+
 void shell::appendHistory(std::vector<std::string> c){
  history.push_back(c);
 
@@ -54,7 +55,6 @@ double shell::getPtime(){
 }
 
 void shell::executeCommand(std::vector<std::string> cmd){
-
  std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
  //execute function
  if(cmd.at(0) == "exit" || cmd.at(0) == "EXIT"){std::exit(0);}

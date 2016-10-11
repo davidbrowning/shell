@@ -14,9 +14,14 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+
+extern "C" void handler(int SigID);
+
+
 class shell{
  public: 
-  shell(){std::cout << "welcome to shell" << std::endl;}
+  shell(){std::cout << "welcome to shell" << std::endl;
+  }
   ~shell(){}
   void appendHistory(std::vector<std::string>);
   void showHistory();
@@ -28,5 +33,7 @@ class shell{
  std::vector<std::vector<std::string> > history;
  double ptime;
 };
+
+
 
 #endif
