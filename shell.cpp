@@ -54,21 +54,22 @@ double shell::getPtime(){
  return ptime;
 }
 
-void shell::executeCommand(std::vector<std::string> cmd){
+void shell::executeCommand(std::vector<std::string> cmd, bool flagFork){
  std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
  //execute function
  if(cmd.at(0) == "exit" || cmd.at(0) == "EXIT"){std::exit(0);}
- else if(cmd.at(0) == "help" || cmd.at(0) == "HELP"){help();}
- else if(cmd.at(0) == "history" || cmd.at(0) == "HISTORY"){showHistory();}
- else if(cmd.at(0) == "ptime" || cmd.at(0) == "PTIME"){getPtime();}
+ else if(cmd.at(0) == "help" || cmd.at(0) == "HELP"){help();if(flagFork){std::exit(0);}}
+ else if(cmd.at(0) == "history" || cmd.at(0) == "HISTORY"){showHistory();if(flagFork){std::exit(0);}}
+ else if(cmd.at(0) == "ptime" || cmd.at(0) == "PTIME"){getPtime();if(flagFork){std::exit(0);}}
  else if(cmd.at(0) == "^"){
    try {int index = std::stoi (cmd.at(1));
     auto cmdx = retrieveHistory(index);
-    executeCommand(cmdx);} 
+    executeCommand(cmdx, false);
+    if(flagFork){std::exit(0);}} 
     catch (std::exception &e){
     std::cout << "Invalid Argument!"<< std::endl;
-    }
-   }
+    if(flagFork){std::exit(0);}
+   }}
  else if(cmd.at(0).empty() == false){
 //  std::cout << "cmd.at(0): " << cmd.at(0) << std::endl;
 //  std::cout << "cmd.size(): " << cmd.size() << std::endl;
@@ -83,7 +84,8 @@ void shell::executeCommand(std::vector<std::string> cmd){
   }
  i = (cmd.size()-1);
  argv[i] = NULL;
- if(fork()){
+ if(flagFork == false){
+	 if(fork()){
   wait(NULL);
   //execvp(argv[0], argv);
  }
@@ -93,11 +95,22 @@ void shell::executeCommand(std::vector<std::string> cmd){
    std::cout << "For help, type \"help\" \n exiting child process..." << std::endl;
    std::vector<std::string> v;
    v.push_back("exit");
-   executeCommand(v);
+   executeCommand(v, true);
   }
  }
-
  }
+ else{
+  if(execvp(argv[0], argv) == -1){
+   std::cout << "Something went wrong.(execvp returned -1) \n Possible causes:\n \t 1) command not in path variable \n \t 2) Invalid command/arguments " << std::endl;
+   std::cout << "For help, type \"help\" \n exiting child process..." << std::endl;
+   std::vector<std::string> v;
+   v.push_back("exit");
+   executeCommand(v, true);
+  }
+ }
+ }
+
+ 
  
  //get end time
  std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();

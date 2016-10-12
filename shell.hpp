@@ -1,6 +1,8 @@
 #ifndef SHELL_HPP
 #define SHELL_HPP
 
+#include<cstdio>
+#include<cstdlib>
 #include<iomanip>
 #include<unistd.h>
 #include<sys/wait.h>
@@ -28,7 +30,7 @@ class shell{
   std::vector<std::string> retrieveHistory(int);
   double getPtime();
   void setPtime(double);
-  void executeCommand(std::vector<std::string>);
+  void executeCommand(std::vector<std::string>, bool);
  private:
  std::vector<std::vector<std::string> > history;
  double ptime;
