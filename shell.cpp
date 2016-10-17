@@ -60,6 +60,18 @@ void shell::pwd(){
  std::cout << workingDirectory;
 }
 
+void shell::changeDirectories(std::vector<std::string> cmd){
+ //const char *pa = "..";
+ //chdir(pa);
+
+   char dir[10];
+ if(cmd.at(1).empty() == false){
+   strcpy(dir,cmd.at(1).c_str());
+  }
+ const char *goingHere = dir;
+ chdir(goingHere);
+}
+
 void shell::executeCommand(std::vector<std::string> cmd){
  std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
  //execute function
@@ -68,6 +80,7 @@ void shell::executeCommand(std::vector<std::string> cmd){
  else if(cmd.at(0) == "history" || cmd.at(0) == "HISTORY"){showHistory();}
  else if(cmd.at(0) == "ptime" || cmd.at(0) == "PTIME"){getPtime();}
  else if(cmd.at(0) == "pwd" || cmd.at(0) == "PWD"){pwd();}
+ else if(cmd.at(0) == "cd" || cmd.at(0) == "CD"){changeDirectories(cmd);}
  else if(cmd.at(0) == "^"){
    try {int index = std::stoi (cmd.at(1));
     auto cmdx = retrieveHistory(index);
