@@ -26,6 +26,7 @@ class shell{
   double getPtime();
   void setPtime(double);
   void pwd();
+  void changeDirectories(std::vector<std::string>);
   void myHandler(int);
   void executeCommand(std::vector<std::string>);
  private:
