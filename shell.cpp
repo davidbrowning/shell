@@ -54,6 +54,12 @@ double shell::getPtime(){
  return ptime;
 }
 
+void shell::pwd(){
+ char workingDirectory[1024];
+ getcwd(workingDirectory, sizeof(workingDirectory));
+ std::cout << workingDirectory;
+}
+
 void shell::executeCommand(std::vector<std::string> cmd){
  std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
  //execute function
@@ -61,6 +67,7 @@ void shell::executeCommand(std::vector<std::string> cmd){
  else if(cmd.at(0) == "help" || cmd.at(0) == "HELP"){help();}
  else if(cmd.at(0) == "history" || cmd.at(0) == "HISTORY"){showHistory();}
  else if(cmd.at(0) == "ptime" || cmd.at(0) == "PTIME"){getPtime();}
+ else if(cmd.at(0) == "pwd" || cmd.at(0) == "PWD"){pwd();}
  else if(cmd.at(0) == "^"){
    try {int index = std::stoi (cmd.at(1));
     auto cmdx = retrieveHistory(index);

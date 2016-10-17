@@ -15,9 +15,6 @@
 #include<stdlib.h>
 
 
-extern "C" void handler(int SigID);
-
-
 class shell{
  public: 
   shell(){std::cout << "welcome to shell" << std::endl;
@@ -28,6 +25,8 @@ class shell{
   std::vector<std::string> retrieveHistory(int);
   double getPtime();
   void setPtime(double);
+  void pwd();
+  void myHandler(int);
   void executeCommand(std::vector<std::string>);
  private:
  std::vector<std::vector<std::string> > history;
