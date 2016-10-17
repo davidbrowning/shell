@@ -57,7 +57,7 @@ double shell::getPtime(){
 void shell::pwd(){
  char workingDirectory[1024];
  getcwd(workingDirectory, sizeof(workingDirectory));
- std::cout << workingDirectory << std::endl;
+ std::cout << workingDirectory;
 }
 
 void shell::executeCommand(std::vector<std::string> cmd){

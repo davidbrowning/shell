@@ -2,9 +2,9 @@
 
 #include<string>
 #include<signal.h>
+#include"color.hpp"
 
 
-extern "C" void MyHandler(int SignalID);
 
 int startShell();
 std::vector<std::string> parseCommand(std::string);
@@ -12,21 +12,31 @@ std::vector<std::string> parseCommand(std::string);
 
 
 int main(){
-	signal(SIGINT, MyHandler);
 startShell();
 return EXIT_SUCCESS;
 }
 
-void MyHandler(int SignalID){
-	std::cout << "You can't escape that easily!" <<  std::endl << "[cmd]:";
-	std::cout.flush();
-	exit(0);
+
+extern "C" void myHandler(int SignalID);
+
+void myHandler(int SignalID){
+ std::cout << "You can't escape that easitly!" << std::endl;
+ char workingDirectory[1024];
+ getcwd(workingDirectory, sizeof(workingDirectory));
+ std::cout << FRED("[ ");
+ std::cout << workingDirectory;
+ std::cout << FRED(" ]: ");
+ std::cout.flush();
 }
 
 int startShell(){
 shell myshell;
+signal(SIGINT, myHandler);
  while(true){
-  std::cout << "[cmd]:";
+  std::cout << FRED("[ ");
+  myshell.pwd();
+  std::cout << FRED(" ]: ");
+  std::cout.flush();
   std::string cmd = "";
   std::getline(std::cin, cmd); 
   auto parsedCommand = parseCommand(cmd);
