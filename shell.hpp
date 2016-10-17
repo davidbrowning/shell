@@ -29,6 +29,8 @@ class shell{
   void changeDirectories(std::vector<std::string>);
   void myHandler(int);
   void executeCommand(std::vector<std::string>);
+  void executePipeCommand(std::vector<std::string>);
+  void handlePipe(std::vector<std::string>, std::vector<std::string>);
  private:
  std::vector<std::vector<std::string> > history;
  double ptime;

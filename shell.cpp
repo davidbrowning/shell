@@ -42,7 +42,7 @@ void help(){
  std::cout << "\t exit: exits the shell" << std::endl << std::endl;
  std::cout << "Shell will also attempt to run any commands located by your PATH variable using the execvp function" << std::endl;
 return;
-}
+std::cout.flush();}
 
 void shell::setPtime(double t){
  ptime += t;
@@ -70,6 +70,115 @@ void shell::changeDirectories(std::vector<std::string> cmd){
   }
  const char *goingHere = dir;
  chdir(goingHere);
+}
+
+
+
+void shell::handlePipe(std::vector<std::string> cmd1, std::vector<std::string> cmd2){
+ std::cout << "I handled the pipe! -not" << std::endl;
+ for(std::string e : cmd1){
+  std::cout << "cmd 1: " <<  e << std::endl;
+ }
+ for(std::string e : cmd2){
+ std::cout << "cmd 2: " << e << std::endl;
+ }
+ std::cout << "Getting the argv arrays set up" << std::endl;
+
+ std::cout << "supposedly, I have both argv1 and argv2 ready to go" << std::endl;
+
+
+  char** argv = new char*[(cmd1.size()+1)];
+  int i = 0;
+  for(i; i < cmd1.size(); i++){
+   if(cmd1.at(i).empty() == false){
+//    std::cout << "cmd.at(" << i << ")" << cmd.at(i) << std::endl;
+    argv[i] = new char[5];
+    strcpy(argv[i],cmd1.at(i).c_str());
+   }
+  }
+ i = (cmd1.size());
+ argv[i] = NULL;
+ 
+  char** argv2 = new char*[(cmd2.size()+1)];
+  i = 0;
+  for(i; i < cmd2.size(); i++){
+   if(cmd2.at(i).empty() == false){
+//    std::cout << "cmd.at(" << i << ")" << cmd.at(i) << std::endl;
+    argv2[i] = new char[5];
+    strcpy(argv2[i],cmd2.at(i).c_str());
+   }
+  }
+ i = (cmd2.size());
+ argv2[i] = NULL;
+ std::cout << "argv[0]: " << argv[0] << std::endl;
+ std::cout << "argv2[0]: " << argv2[0] << std::endl;
+ std::cout.flush();
+ std::cout << "Awesome, now to execute stuff" << std::endl;
+ 
+ const int PIPE_COUNT = 2;
+
+ const int PIPE_READ_END = 0;
+
+ const int PIPE_WRITE_END = 1;
+
+
+
+ const int STDIN = 0;
+
+ const int STDOUT = 1;
+
+	int pids[PIPE_COUNT];
+	pipe(pids);
+
+	int savedStdout = dup(STDOUT);
+	int savedStdin = dup(STDIN);
+
+	//
+	// First child will output the source code to this program to the pipe
+	pid_t pid = fork();
+	if (pid == 0)
+	{
+		dup2(pids[PIPE_WRITE_END], STDOUT);
+
+		execvp(argv[0], argv);
+	}
+
+	//
+	// Second child will 'more' whatever input comes down over the pipe
+	pid_t pid2 = fork();
+	if (pid2 == 0)
+	{
+		dup2(pids[PIPE_READ_END], STDIN);
+		//
+		// This is key, in order to terminate the input from the pipe
+		// have to close off the write end, otherwise the 'more' command
+		// will continue to wait for additional data.
+		close(pids[PIPE_WRITE_END]);
+
+		execvp(argv2[0], argv2);
+	}
+
+	//
+	// Wait for the first child to finish
+	int status;
+	waitpid(pid, &status, 0);
+
+	//
+	// Fully close down the pipe, and yes, for whatever reason, it requires
+	// the parent process to close both ends, even though the second child
+	// already closed the write end...not sure I fully understand this.
+	close(pids[PIPE_WRITE_END]);
+	close(pids[PIPE_READ_END]);
+
+	waitpid(pid2, &status, 0);
+
+	//
+	// Restore standard out and in, so our program will be back to normal when complete
+	dup2(savedStdout, STDOUT);
+	dup2(savedStdin, STDIN);
+
+
+ return;
 }
 
 void shell::executeCommand(std::vector<std::string> cmd){
@@ -128,3 +237,34 @@ void shell::executeCommand(std::vector<std::string> cmd){
 }
 
 
+void shell::executePipeCommand(std::vector<std::string> cmd){
+ std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
+  char** argv = new char*[(cmd.size())];
+  int i = 0;
+  for(i; i < cmd.size()-1; i++){
+   if(cmd.at(i).empty() == false){
+//    std::cout << "cmd.at(" << i << ")" << cmd.at(i) << std::endl;
+    argv[i] = new char[5];
+    strcpy(argv[i],cmd.at(i).c_str());
+   }
+  }
+ i = (cmd.size()-1);
+ argv[i] = NULL;
+  if(execvp(argv[0], argv) == -1){
+   std::cout << "Something went wrong.(execvp returned -1) \n Possible causes:\n \t 1) command not in path variable \n \t 2) Invalid command/arguments " << std::endl;
+   std::cout << "For help, type \"help\" \n exiting child process..." << std::endl;
+   std::vector<std::string> v;
+   v.push_back("exit");
+   executeCommand(v);
+  }
+ 
+
+ 
+ 
+ //get end time
+ std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();
+
+ //total = end minus start
+ std::chrono::duration<double> totalTime = end - start;
+ setPtime(totalTime.count());
+}
