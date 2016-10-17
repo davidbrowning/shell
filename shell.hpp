@@ -28,6 +28,7 @@ class shell{
   std::vector<std::string> retrieveHistory(int);
   double getPtime();
   void setPtime(double);
+  void pwd();
   void executeCommand(std::vector<std::string>);
  private:
  std::vector<std::vector<std::string> > history;
