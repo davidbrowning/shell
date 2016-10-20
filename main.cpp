@@ -4,6 +4,7 @@
 #include<signal.h>
 #include<memory>
 #include"color.hpp"
+#include"shell.cpp"
 
 
 
@@ -98,6 +99,5 @@ std::vector<std::string> parseCommand(std::string s){
  }
 */
  
-
 
 
