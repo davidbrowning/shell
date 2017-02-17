@@ -4,7 +4,6 @@
 #include<signal.h>
 #include<memory>
 #include"color.hpp"
-#include"shell.cpp"
 
 
 
